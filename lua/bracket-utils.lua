@@ -12,6 +12,36 @@ local bracket_pairs = {
   ["'"] = "'",
 }
 
+--[[
+	Check wether cursor is in front of a whitespace. If so it inserts both opening and closing
+	bracket. Else the cursor is in front of text. In that case it just inserts the typed bracket.
+
+	Behavior:
+	| and ( is entered => (|)
+	|x and ( is entered => (|x
+--]]
+function M.handle_open_bracket(char)
+	local cursor = vim.api.nvim_win_get_cursor(0)
+  local line = vim.api.nvim_get_current_line()
+  local col = cursor[2]
+  local next_char = string.sub(line, col + 1, col + 1)
+	local curr_char = string.sub(line, col, col)
+
+  if next_char == '' or next_char == '\n' or next_char == '\t' or curr_char == '' then
+		-- cursor in front of whitespace
+		vim.api.nvim_feedkeys(
+			vim.api.nvim_replace_termcodes(char .. bracket_pairs[char] .. "<Left>", true, false, true),
+			"n", true
+		)
+	else
+		-- cursor in front of text
+		vim.api.nvim_feedkeys(
+			vim.api.nvim_replace_termcodes(char, true, false, true),
+			"n", true
+		)
+  end
+end
+
 --[[ 
   Additional implementation for quotations because they behave different 
   (since the open and closed character is the same)
@@ -131,4 +161,3 @@ function M.space_enter()
 end
 
 return M
-
