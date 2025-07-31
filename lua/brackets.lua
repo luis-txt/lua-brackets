@@ -20,4 +20,4 @@ vim.keymap.set('i', '<BS>', bracket_utils.remove_matching_bracket, opts)
 vim.keymap.set('i', '<CR>', bracket_utils.space_enter, opts)
 
 -- Right arrow skips any closer
-vim.keymap.set('i', '<Right>', bracket_utils.close_pair, opts)
+vim.keymap.set('i', '<Right>', bracket_utils.skip_close_pair, opts)
